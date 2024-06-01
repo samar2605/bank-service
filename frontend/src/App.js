@@ -1,46 +1,54 @@
+import React from "react";
 import "./App.css";
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-
-// function App() {
-//   const [listOfPosts, setListOfPosts] = useState([]);
-
-//   useEffect(() => {
-//     axios.get("http://localhost:3001/auth").then((response) => {
-//       setListOfPosts(response.data);
-//     });
-//   }, []);
-//   return (
-//     <div className="App">
-//       {listOfPosts.map((value, key) => {
-//         return (
-//           <div className="post">
-//             <div className="footer">{value.username}</div>
-//           </div>
-//         );
-//       })}
-//     </div>
-//   );
-// }
-
-// frontend/src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import NavBar from './components/NavBar';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import Home from "./components/Home";
+import NavBar from "./components/NavBar";
+import { AuthContext } from "./helpers/AuthContext";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const App = () => {
+  const [authState, setAuthState] = useState({
+    username: "",
+    id: 0,
+    status: false,
+  });
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/auth/validate`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        if (response.data.error) {
+          setAuthState({ ...authState, status: false });
+        } else {
+          setAuthState({
+            username: response.data.username,
+            id: response.data.user_id,
+            status: true,
+          });
+        }
+      });
+  }, []);
+
   return (
-    <Router>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </Router>
+    <AuthContext.Provider value={{ authState, setAuthState }}>
+      <Router>
+        <NavBar authState={authState} setAuthState={setAuthState} />
+        <div style={{ paddingTop: "5rem" }}></div>
+        <Routes>
+          <Route path="/" element={<SignIn />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </Router>
+    </AuthContext.Provider>
   );
 };
-
 export default App;

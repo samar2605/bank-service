@@ -20,12 +20,14 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ where: { email } });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    const user = await User.findOne({ where: { email:email } });
+    if (!user) res.json({ error: "User Doesn't Exist" });
+
+    if (!(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-    const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    const accessToken = jwt.sign({username:user.username, user_id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token:accessToken,username:user.username, user_id:user.user_id });
     console.log("signin success");
   } catch (error) {
     console.log("signin error");

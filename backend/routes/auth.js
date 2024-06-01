@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { signUp, signIn } = require("../controllers/authController");
 const { User } = require("../models");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { validateToken } = require("../middleware/authMiddleware");
+
 
 router.get("/", async (req, res) => {
   const listOfUsers = await User.findAll();
@@ -22,5 +22,10 @@ router.post("/", async (req, res) => {
 
 router.post("/signup", signUp);
 router.post("/signin", signIn);
+
+
+router.get("/validate", validateToken, (req, res) => {
+  res.json(req.user);
+});
 
 module.exports = router;
