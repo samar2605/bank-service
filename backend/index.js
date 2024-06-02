@@ -5,16 +5,11 @@ const cors = require('cors');
 
 app.use(express.json());
 
-const allowedOrigins = ['https://main--banking-service.netlify.app/', 'https://bank-service-production.up.railway.app','https://bank-service-beryl.vercel.app'];
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  optionsSuccessStatus: 200,
+  origin: '*', // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
