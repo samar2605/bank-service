@@ -50,7 +50,7 @@ const transactionRoutes = require('./routes/transactions');
 app.use('/api/transactions', transactionRoutes);
 // Sync database and start server
 db.sequelize.sync().then(() => {
-  app.listen(process.env.MYSQLPORT || 3001, () => {
+  app.listen(process.env.PORT || 3001, () => {
     console.log(`Server running on port ${process.env.PORT || 3001}`);
   });
 }).catch(err => console.log(err));
