@@ -8,9 +8,16 @@ app.use(cors());
 
 // Database configuration
 const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  dialect: process.env.DB_DIALECT,
+
+//for local
+// const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+//   host: process.env.DB_HOST,
+//   dialect: process.env.DB_DIALECT,
+// });
+
+const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQLUSER, process.env.MYSQLPASSWORD, {
+  host: process.env.MYSQLHOST,
+  dialect:"mysql",
 });
 
 // Test database connection
@@ -47,7 +54,7 @@ const transactionRoutes = require('./routes/transactions');
 app.use('/api/transactions', transactionRoutes);
 // Sync database and start server
 db.sequelize.sync().then(() => {
-  app.listen(process.env.PORT || 3001, () => {
+  app.listen(process.env.MYSQLPORT || 3001, () => {
     console.log(`Server running on port ${process.env.PORT || 3001}`);
   });
 }).catch(err => console.log(err));

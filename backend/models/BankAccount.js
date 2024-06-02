@@ -6,13 +6,13 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
     },
     account_number: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
     account_type: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
+    }, 
     balance: {
       type: DataTypes.FLOAT,
       allowNull: false,
