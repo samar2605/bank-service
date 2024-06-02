@@ -4,8 +4,20 @@ require('dotenv').config();
 const cors = require('cors');
 
 app.use(express.json());
-app.use(cors());
 
+const allowedOrigins = ['https://main--banking-service.netlify.app/', 'https://bank-service-production.up.railway.app','https://bank-service-beryl.vercel.app'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 // Database configuration
 const { Sequelize } = require('sequelize');
 
@@ -14,7 +26,8 @@ const { Sequelize } = require('sequelize');
 //   host: process.env.DB_HOST,
 //   dialect: process.env.DB_DIALECT,
 // });
-const sequelize = new Sequelize(process.env.MYSQL_URL, {dialect:"mysql"} );
+
+const sequelize = new Sequelize(process.env.MYSQL_URL, {dialect:"mysql",logging: console.log} );
 
 // Test database connection
 sequelize.authenticate()
