@@ -1,45 +1,45 @@
 module.exports = (sequelize, DataTypes) => {
-    const BankAccount = sequelize.define("BankAccount", {
-      account_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+  const BankAccount = sequelize.define("BankAccount", {
+    account_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    account_number: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    account_type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    balance: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'user_id',
       },
-      account_number: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    },
+    bank_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'banks',
+        key: 'bank_id',
       },
-      account_type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      balance: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      user_id: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'user_id',
-        },
-        allowNull: false,
-      },
-      bank_id: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'Banks',
-          key: 'bank_id',
-        },
-        allowNull: false,
-      },
-    });
-  
-    BankAccount.associate = models => {
-      BankAccount.belongsTo(models.User, { foreignKey: 'user_id' });
-      BankAccount.belongsTo(models.Bank, { foreignKey: 'bank_id' });
-    };
-  
-    return BankAccount;
+    },
+  });
+
+  BankAccount.associate = models => {
+    BankAccount.belongsTo(models.User, { foreignKey: 'user_id',targetKey:'user_id' });
+    BankAccount.belongsTo(models.Bank, { foreignKey: 'bank_id', targetKey:'bank_id' });
+    BankAccount.hasMany(models.Transaction, { foreignKey: 'account_id'});
   };
-  
+
+  return BankAccount;
+};

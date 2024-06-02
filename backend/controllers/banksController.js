@@ -15,6 +15,7 @@ const getBanksByUserId = async (req, res) => {
     });
 
     const result = bankAccounts.map(account => ({
+      bank_id: account.Bank.bank_id,
       bankname: account.Bank.bankname,
       bank_branch: account.Bank.bank_branch,
       ifsc_code: account.Bank.ifsc_code,

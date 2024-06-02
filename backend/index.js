@@ -29,6 +29,7 @@ db.sequelize = sequelize;
 db.User = require('./models/User')(sequelize, Sequelize.DataTypes);
 db.Bank = require('./models/Bank')(sequelize, Sequelize.DataTypes);
 db.BankAccount = require('./models/BankAccount')(sequelize, Sequelize.DataTypes);
+db.Transaction = require('./models/Transaction')(sequelize, Sequelize.DataTypes);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
@@ -42,6 +43,8 @@ app.use('/api/auth', authRoutes);
 const bankRoutes = require('./routes/banks');
 app.use('/api/banks', bankRoutes);
 
+const transactionRoutes = require('./routes/transactions');
+app.use('/api/transactions', transactionRoutes);
 // Sync database and start server
 db.sequelize.sync().then(() => {
   app.listen(process.env.PORT || 3001, () => {
