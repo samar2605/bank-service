@@ -1,12 +1,12 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 require('dotenv').config();
-const cors = require("cors")
+const cors = require('cors');
 
 app.use(express.json());
 app.use(cors());
 
-// Database configuration (assuming you have Sequelize setup)
+// Database configuration
 const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
@@ -22,18 +22,29 @@ sequelize.authenticate()
     console.error('Unable to connect to the database:', err);
   });
 
-// const db = require("./models");
-const port = process.env.PORT || 3001;
+const db = {};
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.User = require('./models/User')(sequelize, Sequelize.DataTypes);
+db.Bank = require('./models/Bank')(sequelize, Sequelize.DataTypes);
+db.BankAccount = require('./models/BankAccount')(sequelize, Sequelize.DataTypes);
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
-sequelize.sync().then(() => {
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
-}).catch(err => console.log(err));;
+const bankRoutes = require('./routes/banks');
+app.use('/api/banks', bankRoutes);
 
-  // app.listen(port, () => {
-  //   console.log(`Server running on port ${port}`);
-  // });
+// Sync database and start server
+db.sequelize.sync().then(() => {
+  app.listen(process.env.PORT || 3001, () => {
+    console.log(`Server running on port ${process.env.PORT || 3001}`);
+  });
+}).catch(err => console.log(err));
