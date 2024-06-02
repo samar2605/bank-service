@@ -34,7 +34,7 @@ const App = () => {
           });
         }
       });
-  }, []);
+  }, [authState]);
 
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>
@@ -43,7 +43,7 @@ const App = () => {
         <div style={{ paddingTop: "5rem" }}></div>
         <Routes>
           <Route path="/" element={<SignIn />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<Home authState={authState} />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
