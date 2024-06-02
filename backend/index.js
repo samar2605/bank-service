@@ -14,11 +14,7 @@ const { Sequelize } = require('sequelize');
 //   host: process.env.DB_HOST,
 //   dialect: process.env.DB_DIALECT,
 // });
-
-const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQLUSER, process.env.MYSQLPASSWORD, {
-  host: process.env.MYSQLHOST,
-  dialect:"mysql",
-});
+const sequelize = new Sequelize(process.env.MYSQL_URL, {dialect:"mysql"} );
 
 // Test database connection
 sequelize.authenticate()
