@@ -31,6 +31,11 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (!firstName || !lastName || !email || !username || !password || !confirmPassword) {
+      setError("All fields are required");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -77,6 +82,7 @@ const SignUp = () => {
           <TextField
             label="Email"
             variant="outlined"
+            type="email"
             fullWidth
             className={classes.formElement}
             value={email}
