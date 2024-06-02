@@ -5,14 +5,7 @@ const cors = require('cors');
 
 app.use(express.json());
 
-const corsOptions = {
-  origin: '*', // Allow all origins
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 // Database configuration
 const { Sequelize } = require('sequelize');
 
